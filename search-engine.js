@@ -1,7 +1,7 @@
 /**
- * SearchEngine class
+ * SearchData class
  */
-class Data {
+class SearchData {
     constructor(form) {
         this.form = $(form);
         this.data = false;
@@ -56,9 +56,9 @@ class Data {
 }
 
 /**
- * Loader class
+ * SearchLoader class
  */
-class Loader {
+class SearchLoader {
     constructor(config) {
         this.config = config;
     }
@@ -83,9 +83,9 @@ class Loader {
 }
 
 /**
- * Render class
+ * SearchRender class
  */
-class Render {
+class SearchRender {
     /**
      * constructor
      * @param config
@@ -148,9 +148,9 @@ class Render {
 }
 
 /**
- * SearchEngine class
+ * StaticSearch class
  */
-class SearchEngine {
+class StaticSearch {
     /**
      * Constructor
      * @param config
@@ -210,9 +210,9 @@ class SearchEngine {
         this.config.autoload = this.or(config.autoload, true);
 
         // Create object
-        this.formData = new Data(this.config.elements.form);
-        this.loader = new Loader(this.config.loader);
-        this.render = new Render(this.config.render);
+        this.formData = new SearchData(this.config.elements.form);
+        this.loader = new SearchLoader(this.config.loader);
+        this.render = new SearchRender(this.config.render);
     }
 
     /**
