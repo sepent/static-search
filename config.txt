@@ -1,10 +1,10 @@
 {
-	url: "Mặc định get từ thẻ form",
-	method: "Mặc định get từ thẻ form",
+	url: "Default get from attribute action of form",
+	method: "Default get from attribute method of form",
 	dataType: "html",
-	
 	autoload: true,
 	
+	// Setting elements in your html page
 	elements: {
 		form: ".search-engine-form",
 		pagination: ".search-engine-pagination a",
@@ -13,6 +13,7 @@
 		error: ".search-engine-error"
 	},
 	
+	// Setting custom method
 	methods: {
 		render: {
 			error: function(){},
@@ -20,6 +21,7 @@
 		}
 	},
 	
+	// Setting custom events
 	events: {
 		submit: function(){},
 		loading: function(){},
