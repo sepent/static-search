@@ -1,0 +1,29 @@
+{
+	url: "Mặc định get từ thẻ form",
+	method: "Mặc định get từ thẻ form",
+	dataType: "html",
+	
+	autoload: true,
+	
+	elements: {
+		form: ".search-engine-form",
+		pagination: ".search-engine-pagination a",
+		record: ".search-engine-record a",
+		success: ".search-engine-success",
+		error: ".search-engine-error"
+	},
+	
+	methods: {
+		render: {
+			error: function(){},
+			success: function(){}, 
+		}
+	},
+	
+	events: {
+		submit: function(){},
+		loading: function(){},
+		loaded: function(){},
+		render: function(){}
+	}
+}
