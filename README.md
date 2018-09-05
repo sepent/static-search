@@ -5,7 +5,7 @@ StaticSearch is object, It provide methods to client call to server to get data.
 **Platform**
 - Jquery
 
-**Using**
+**Usage**
 
 Import file StaticSearch.js to your html page. Then create new object and run it.
 
