@@ -17,7 +17,7 @@ function SearchData(form) {
         }
 
         return this.data;
-    }
+    };
 
     /**
      * Reset data
@@ -34,7 +34,7 @@ function SearchData(form) {
         this.setData(data, null);
 
         return this;
-    }
+    };
 
     /**
      * Set data
@@ -50,7 +50,7 @@ function SearchData(form) {
         }
 
         return this;
-    }
+    };
 }
 
 /**
@@ -70,12 +70,12 @@ function SearchLoader(config) {
             method: this.config.method,
             dataType: this.config.dataType,
             data: parameters
-        }).then(async function (response) {
+        }).then(function (response) {
 			callback({status: true, response});
         }).catch(function (error) {
 			callback({status: false, error});
         });
-    }
+    };
 }
 
 /**
@@ -96,7 +96,7 @@ function SearchRender(config) {
         }
 
         return this;
-    }
+    };
 
     /**
      * Error
@@ -119,7 +119,7 @@ function SearchRender(config) {
         }
 
         return this;
-    }
+    };
 
     /**
      * Run
@@ -134,70 +134,14 @@ function SearchRender(config) {
         }
 
         return this.error(result.error);
-    }
+    };
 }
 
 /**
  * StaticSearch class
  */
 function StaticSearch(config) {
-	if (config == undefined) {
-		config = {};
-	}
-
-	if (config.elements == undefined) {
-		config.elements = {};
-	}
-
-	if (config.methods == undefined) {
-		config.methods = {};
-	}
-
-	if (config.events == undefined) {
-		config.events = {};
-	}
-
-	// Set config
-	this.config = {};
-	this.config.elements = {
-		form: this.or(config.elements.form, '.search-engine-form'),
-		pagination: this.or(config.elements.pagination, '.search-engine-pagination a'),
-		record: this.or(config.elements.record, '.search-engine-record a')
-	};
-
-	// Config for loader
-	this.config.loader = {
-		url: this.or(config.url, $(this.config.elements.form).attr('action')),
-		method: this.or(config.method, $(this.config.elements.form).attr('method')),
-		dataType: this.or(config.dataType, 'html')
-	};
-
-	// Config for render
-	this.config.render = {
-		success: this.or(config.elements.success, '.search-engine-success'),
-		error: this.or(config.elements.error, '.search-engine-error'),
-		methods: this.or(config.methods.render, {})
-	};
-
-	// Config event
-	this.events = {
-		submit: this.or(config.events.submit, function (formData) {
-		}),
-		loading: this.or(config.events.loading, function (loader, parameters) {
-		}),
-		loaded: this.or(config.events.loaded, function (result) {
-		}),
-		render: this.or(config.events.render, function (result) {
-		})
-	};
-
-	// Config init
-	this.config.autoload = this.or(config.autoload, true);
-
-	// Create object
-	this.formData = new SearchData(this.config.elements.form);
-	this.loader = new SearchLoader(this.config.loader);
-	this.render = new SearchRender(this.config.render);
+    var instance = this;
 
     /**
      * Passing data or default data
@@ -207,7 +151,7 @@ function StaticSearch(config) {
      */
     this.or = function(data, defaultData) {
         return data == undefined ? defaultData : data;
-    }
+    };
 
     /**
      * Config event
@@ -222,7 +166,7 @@ function StaticSearch(config) {
         }
 
         return this;
-    }
+    };
 
     /**
      * Submit
@@ -250,7 +194,7 @@ function StaticSearch(config) {
         });
 
         return this;
-    }
+    };
 
     /**
      * Paginate
@@ -267,7 +211,7 @@ function StaticSearch(config) {
         });
 
         return this;
-    }
+    };
 
     /**
      * Load record
@@ -284,7 +228,7 @@ function StaticSearch(config) {
         });
 
         return this;
-    }
+    };
 
     /**
      * Load content
@@ -336,7 +280,7 @@ function StaticSearch(config) {
 		});
 		
         return;
-    }
+    };
 
     /**
      * Init object
@@ -349,7 +293,7 @@ function StaticSearch(config) {
         }
 
         return this;
-    }
+    };
 
     /**
      * Run search engine
@@ -360,5 +304,63 @@ function StaticSearch(config) {
             .pagination()
             .record()
             .init();
-    }
+    };
+
+    if (config == undefined) {
+		config = {};
+	}
+
+	if (config.elements == undefined) {
+		config.elements = {};
+	}
+
+	if (config.methods == undefined) {
+		config.methods = {};
+	}
+
+	if (config.events == undefined) {
+		config.events = {};
+	}
+
+	// Set config
+	this.config = {};
+	this.config.elements = {
+		form: instance.or(config.elements.form, '.static-search-form'),
+		pagination: instance.or(config.elements.pagination, '.static-search-pagination a'),
+		record: instance.or(config.elements.record, '.static-search-record a')
+	};
+
+	// Config for loader
+	this.config.loader = {
+		url: instance.or(config.url, $(this.config.elements.form).attr('action')),
+		method: instance.or(config.method, $(this.config.elements.form).attr('method')),
+		dataType: instance.or(config.dataType, 'html')
+	};
+
+	// Config for render
+	this.config.render = {
+		success: instance.or(config.elements.success, '.static-search-success'),
+		error: instance.or(config.elements.error, '.static-search-error'),
+		methods: instance.or(config.methods.render, {})
+	};
+
+	// Config event
+	this.events = {
+		submit: instance.or(config.events.submit, function (formData) {
+		}),
+		loading: instance.or(config.events.loading, function (loader, parameters) {
+		}),
+		loaded: instance.or(config.events.loaded, function (result) {
+		}),
+		render: instance.or(config.events.render, function (result) {
+		})
+	};
+
+	// Config init
+	this.config.autoload = instance.or(config.autoload, true);
+
+	// Create object
+	this.formData = new SearchData(this.config.elements.form);
+	this.loader = new SearchLoader(this.config.loader);
+	this.render = new SearchRender(this.config.render);
 }
