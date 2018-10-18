@@ -175,9 +175,10 @@ class StaticSearch {
         // Set config
         this.config = {};
         this.config.elements = {
-            form: this.or(config.elements.form, '.search-engine-form'),
-            pagination: this.or(config.elements.pagination, '.search-engine-pagination a'),
-            record: this.or(config.elements.record, '.search-engine-record a')
+            form: this.or(config.elements.form, '.ss-form'),
+            pagination: this.or(config.elements.pagination, '.ss-pagination a'),
+			order: this.or(config.elements.pagination, '.ss-order'),
+            record: this.or(config.elements.record, '.ss-record a')
         };
 
         // Config for loader
@@ -189,8 +190,8 @@ class StaticSearch {
 
         // Config for render
         this.config.render = {
-            success: this.or(config.elements.success, '.search-engine-success'),
-            error: this.or(config.elements.error, '.search-engine-error'),
+            success: this.or(config.elements.success, '.ss-success'),
+            error: this.or(config.elements.error, '.ss-error'),
             methods: this.or(config.methods.render, {})
         };
 
@@ -284,6 +285,40 @@ class StaticSearch {
 
         return this;
     }
+	
+	/**
+     * Order
+     * @return {SearchEngine}
+     */
+    order() {
+        $(document).on('click', this.config.elements.order, function (e) {
+            e.preventDefault();
+            var field = $(this).attr('data-sort');
+            var oldData = instance.formData.getData();
+
+            if (field == undefined) {
+                return;
+            }
+
+            if (oldData.sort_column == field) {
+                if (oldData.sort_type == 2) {
+                    instance.formData.setData('sort_type', 'asc');
+                } else {
+                    instance.formData.setData('sort_type', 'desc');
+                }
+            } else {
+                instance.formData.setData('sort_column', field);
+                instance.formData.setData('sort_type', 'asc');
+            }
+
+            instance.formData.setData('page', 1);
+
+            var newData = instance.formData.getData();
+            instance.loadContent(newData);
+        });
+
+        return this;
+    }
 
     /**
      * Load record
@@ -373,6 +408,7 @@ class StaticSearch {
         return this.submit()
             .pagination()
             .record()
+			.order()
             .init();
     }
 }
