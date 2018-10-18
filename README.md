@@ -18,11 +18,12 @@ var search = new StaticSearch({
 	
 	// Setting elements in your html page
 	elements: {
-		form: ".search-engine-form",
-		pagination: ".search-engine-pagination a",
-		record: ".search-engine-record a",
-		success: ".search-engine-success",
-		error: ".search-engine-error"
+		form: ".ss-form",
+		pagination: ".ss-pagination a",
+		order: ".ss-order",
+		record: ".ss-record a",
+		success: ".ss-success",
+		error: ".ss-error"
 	},
 	
 	// Setting custom method
