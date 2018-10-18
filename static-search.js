@@ -408,7 +408,7 @@ class StaticSearch {
         return this.submit()
             .pagination()
             .record()
-			.order()
+            .order()
             .init();
     }
 }
