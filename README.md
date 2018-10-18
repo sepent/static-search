@@ -7,7 +7,7 @@ StaticSearch is object, It provide methods to client call to server to get data.
 
 **Usage**
 
-Import file StaticSearch.js to your html page. Then create new object and run it.
+Import file static-search.js (using ES6) or static-search.ie.js (for old browsers) to your html page. Then create new object and run it.
 
 ```
 var search = new StaticSearch({
