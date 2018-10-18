@@ -227,7 +227,7 @@ function StaticSearch(config) {
             }
 
             if (oldData.sort_column == field) {
-                if (oldData.sort_type == 2) {
+                if (oldData.sort_type === 'desc') {
                     instance.formData.setData('sort_type', 'asc');
                 } else {
                     instance.formData.setData('sort_type', 'desc');
