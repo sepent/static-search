@@ -1,8 +1,9 @@
 /**
  * SearchData class
  */
-function SearchData(form) {
-    this.form = $(form);
+function SearchData(app) {
+    this.app = app;
+    this.form = $(this.app.config.elements.form);
     this.data = false;
 
     /**
@@ -56,8 +57,8 @@ function SearchData(form) {
 /**
  * SearchLoader class
  */
-function SearchLoader(config) {
-    this.config = config;
+function SearchLoader(app) {
+    this.app = app;
 
     /**
      * Load data
@@ -66,14 +67,14 @@ function SearchLoader(config) {
      */
     this.load = function (parameters, callback) {
         $.ajax({
-            url: this.config.url,
-            method: this.config.method,
-            dataType: this.config.dataType,
+            url: this.app.config.loader.url,
+            method: this.app.config.loader.method,
+            dataType: this.app.config.loader.dataType,
             data: parameters
         }).then(function (response) {
-            callback({status: true, response});
+            callback({status: true, response: response});
         }).catch(function (error) {
-            callback({status: false, error});
+            callback({status: false, error: error});
         });
     };
 }
@@ -81,19 +82,21 @@ function SearchLoader(config) {
 /**
  * SearchRender class
  */
-function SearchRender(config) {
-    this.config = config;
+function SearchRender(app) {
+    this.app = app;
 
     /**
      * Success
      * @param result
      */
     this.success = function (result) {
-        if (this.config.methods['success'] != undefined) {
-            this.config.methods['success'](result);
+        if (this.app.config.render.methods.success != undefined) {
+            this.app.config.render.methods.success(result);
         } else {
-            $(this.config.success).html(result);
+            $(this.app.config.render.success).html(result);
         }
+
+        this.app.events.rendered('success', result);
 
         return this;
     };
@@ -103,11 +106,9 @@ function SearchRender(config) {
      * @param error
      */
     this.error = function (error) {
-        if (this.config.methods['error'] != undefined) {
-            this.config.methods['error'](error);
+        if (this.app.config.render.methods.error != undefined) {
+            this.app.config.render.methods.error(error);
         } else {
-            console.log(error);
-
             if (error.responseText) {
                 var errors = typeof error.responseText == 'object' ? error.responseText : JSON.parse(error.responseText);
 
@@ -117,6 +118,8 @@ function SearchRender(config) {
                 }
             }
         }
+
+        this.app.events.rendered('error', error);
 
         return this;
     };
@@ -197,17 +200,31 @@ function StaticSearch(config) {
     };
 
     /**
-     * Paginate
-     * @return {SearchEngine}
+     * Pagination
+     * @return {StaticSearch}
      */
     this.pagination = function () {
         let instance = this;
 
-        // Event for pagination
+        // Event when click on pagination
         $(document).on('click', this.config.elements.pagination, function (e) {
             e.preventDefault();
-            var parameters = instance.formData.setData('page', $(this).attr('data-page')).getData();
-            instance.loadContent(parameters);
+            var page = $(this).attr('data-page');
+
+            if (isNaN(page)) {
+                var url = $(this).attr('href').split('?')[1];
+                var params = url.split('&');
+                for (var i = 0; i < params.length; i++) {
+                    var name = params[i].split('=');
+                    if (name[0] == 'page') {
+                        page = name[1];
+                        break;
+                    }
+                }
+            }
+
+            var parameters = instance.formData.setData('page', page).getData();
+            instance.loadContent(parameters)
         });
 
         return this;
@@ -219,28 +236,29 @@ function StaticSearch(config) {
     this.order = function () {
         $(document).on('click', this.config.elements.order, function (e) {
             e.preventDefault();
-            var field = $(this).attr('data-sort');
-            var oldData = instance.formData.getData();
+
+            var field = $(this).closest('th').attr('data-sort');
+            var old_data = instance.formData.getData();
+            var type = $(this).attr('data-type');
 
             if (field == undefined) {
                 return;
             }
 
-            if (oldData.sort_column == field) {
-                if (oldData.sort_type === 'desc') {
-                    instance.formData.setData('sort_type', 'asc');
-                } else {
-                    instance.formData.setData('sort_type', 'desc');
+            if (old_data.sort_column === field) {
+                if (old_data.sort_type === type) {
+                    return;
                 }
+
+                instance.formData.setData('sort_type', type);
             } else {
                 instance.formData.setData('sort_column', field);
-                instance.formData.setData('sort_type', 'asc');
+                instance.formData.setData('sort_type', type);
             }
 
             instance.formData.setData('page', 1);
-
-            var newData = instance.formData.getData();
-            instance.loadContent(newData);
+            var new_data = instance.formData.getData();
+            instance.loadContent(new_data);
         });
 
         return this;
@@ -361,7 +379,7 @@ function StaticSearch(config) {
     this.config.elements = {
         form: instance.or(config.elements.form, '.ss-form'),
         pagination: instance.or(config.elements.pagination, '.ss-pagination a'),
-        order: instance.or(config.elements.order, '.ss-order'),
+        order: instance.or(config.elements.order, '.ss-order span'),
         record: instance.or(config.elements.record, '.ss-record a')
     };
 
@@ -388,6 +406,8 @@ function StaticSearch(config) {
         loaded: instance.or(config.events.loaded, function (result) {
         }),
         render: instance.or(config.events.render, function (result) {
+        }),
+        rendered: instance.or(config.events.rendered, function (result) {
         })
     };
 
@@ -395,7 +415,7 @@ function StaticSearch(config) {
     this.config.autoload = instance.or(config.autoload, true);
 
     // Create object
-    this.formData = new SearchData(this.config.elements.form);
-    this.loader = new SearchLoader(this.config.loader);
-    this.render = new SearchRender(this.config.render);
+    this.formData = new SearchData(this);
+    this.loader = new SearchLoader(this);
+    this.render = new SearchRender(this);
 }
