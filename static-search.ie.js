@@ -332,6 +332,17 @@ function StaticSearch(config) {
 
         return;
     };
+    
+    /**
+     * Reload content with current condition
+     * @return {SearchEngine}
+     */
+    this.reload = function () {
+        var parameters = this.formData.getData();
+        this.loadContent(parameters);
+        
+        return this;
+    };
 
     /**
      * Init object
