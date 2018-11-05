@@ -407,6 +407,17 @@ class StaticSearch {
         instance.render.run(content);
         return;
     }
+    
+    /**
+     * Reload content with current condition
+     * @return {SearchEngine}
+     */
+    reload() {
+        let parameters = this.formData.getData();
+        this.loadContent(parameters);
+        
+        return this;
+    }
 
     /**
      * Init object
