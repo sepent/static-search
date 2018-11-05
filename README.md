@@ -20,7 +20,7 @@ var search = new StaticSearch({
 	elements: {
 		form: ".ss-form",
 		pagination: ".ss-pagination a",
-		order: ".ss-order",
+		order: ".ss-order span",
 		record: ".ss-record a",
 		success: ".ss-success",
 		error: ".ss-error"
@@ -39,7 +39,8 @@ var search = new StaticSearch({
 		submit: function(){},
 		loading: function(){},
 		loaded: function(){},
-		render: function(){}
+		render: function(){},
+		rendered: function(){}
 	}
 });
 ```
