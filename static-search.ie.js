@@ -176,7 +176,7 @@ function StaticSearch(config) {
      * @return {SearchEngine}
      */
     this.submit = function () {
-        let instance = this;
+        var instance = this;
 
         // Event when on submit
         // Get form data and call server to load data
@@ -204,7 +204,7 @@ function StaticSearch(config) {
      * @return {StaticSearch}
      */
     this.pagination = function () {
-        let instance = this;
+        var instance = this;
 
         // Event when click on pagination
         $(document).on('click', this.config.elements.pagination, function (e) {
